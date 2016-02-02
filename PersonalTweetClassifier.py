@@ -37,29 +37,29 @@ class PersonalTweetClassifier:
 
         return False
 
-    def filter(self, term):
-        if term in self.intensifiers:
+    def filter(self, term, rules):
+        if rules['intensifiers'] and term in self.intensifiers:
             return True
 
-        if term in self.exclamations:
+        if rules['exclamations'] and term in self.exclamations:
             return True
 
-        if term in self.modalVerbs:
+        if rules['modalVerbs'] and term in self.modalVerbs:
             return True
 
         # if term in self.pronouns:
         #     return True
 
-        if term in self.emoticons:
+        if rules['emoticons'] and term in self.emoticons:
             return True
 
-        if self.repeated_character_rule(term):
+        if rules['repeatedCharacters'] and self.repeated_character_rule(term):
             return True
 
-        if len(term) > 1 and term in self.slang:
+        if rules['slang'] and len(term) > 1 and term in self.slang:
             return True
 
-        if len(term) > 3 and term.isupper():
+        if rules['caps'] and len(term) > 3 and term.isupper():
             return True
 
         return False
@@ -68,15 +68,16 @@ if __name__ == '__main__':
     personals = PersonalTweetClassifier()
     os.chdir("..")
 
+    rules = {'intensifiers': True, 'exclamations': True, 'modalVerbs': True, 'emoticons': True, 'repeatedCharacters': True, 'slang': True, 'caps': True}
     count = 0
 
-    for tweet in FileFunc.read_file_into_list("test_data.txt"):
+    for tweet in FileFunc.read_file_into_list("../test_data.txt"):
         for term in tweet.split():
-            if personals.filter(term):
+            if personals.filter(term, rules):
                 print(tweet)
                 count += 1
                 break
-    print()
+                
     print(count, "'personal' tweets found")
 
 # latent factor model http://ijcai.org/papers15/Papers/IJCAI15-322.pdf
