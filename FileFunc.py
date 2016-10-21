@@ -2,8 +2,16 @@ import os, errno
 import glob
 import json
 
+import codecs
 
 class FileFunc:
+
+    @staticmethod
+    def read_file_into_list_unicode(filename):
+        with codecs.open(filename, 'r', 'utf8') as f:
+            data = [line.strip() for line in f]
+        return data
+
     @staticmethod
     def read_file_into_list(filename):
         with open(filename, 'r') as f:
