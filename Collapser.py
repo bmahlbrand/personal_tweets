@@ -1,6 +1,7 @@
 from FileFunc import FileFunc
 from twokenize import simpleTokenize
 
+
 def split(filename):
     tweets = FileFunc.read_file_into_list_unicode('tweets.csv')
 
@@ -11,8 +12,10 @@ def split(filename):
 
     return data
 
+
 def get_hashtag_users(hashtag):
     pass
+
 
 def parse():
     hashtags = FileFunc.read_file_into_list('allhashtags.csv') #gather hashtags
@@ -68,5 +71,46 @@ def parse():
             f.write(str(edge[0][0]) + ',' + str(edge[0][1]) + ',' + str(edge[1]) + '\n')
 
 
+def combine(filename1, filename2):
+    list1 = FileFunc.read_file_into_list(filename1)
+
+    list2 = FileFunc.read_file_into_list(filename2)
+
+    print(list1)
+
+    combinedMap = {}
+
+    list1.pop(0)
+
+    for e in list1:
+        tokens = e.split(',')
+        combinedMap[(tokens[0], tokens[1])] = 0
+
+    list2.pop(0)
+    for e in list2:
+        tokens = e.split(',')
+        combinedMap[(tokens[0], tokens[1])] = 0
+
+
+    for e in list1:
+        tokens = e.split(',')
+        combinedMap[(tokens[0], tokens[1])] += int(tokens[2])
+
+    for e in list2:
+        tokens = e.split(',')
+        combinedMap[(tokens[0], tokens[1])] += int(tokens[2])
+
+    with open('combinedEdges.csv', 'w') as f:
+        f.write('User1,User2,ComFreq\n')
+
+    with open('combinedEdges.csv', 'a') as f:
+        for edge in combinedMap.items():
+            f.write(str(edge[0][0]) + ',' + str(edge[0][1]) + ',' + str(edge[1]) + '\n')
+
+    # print(combinedMap)
+    # for e in list2:
+    #     combinedMap[]
+
 if __name__ == '__main__':
-    parse()
+    # parse()
+    combine('edge.csv', 'data/User_Network_Table.csv')
